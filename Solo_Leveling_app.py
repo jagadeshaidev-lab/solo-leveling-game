@@ -1,3 +1,4 @@
+# --- UPGRADED CODE (Version 1.2) ---
 import streamlit as st
 from datetime import date
 
@@ -75,7 +76,7 @@ with col1:
         if st.button("Upgrade Stat"):
             hunter['stats'][stat_to_upgrade] += 1
             hunter['skill_points'] -= 1
-            st.rerun() # FIXED: Changed to st.rerun()
+            st.rerun()
 
 with col2:
     st.subheader("System Store")
@@ -84,35 +85,66 @@ with col2:
         if st.button(f"Buy '{item['name']}' ({cost} G)", key=f"buy_{key}"):
             if hunter['gold'] >= cost:
                 hunter['gold'] -= cost
-                st.success(f"Purchased '{item['name']}'!")
-                st.rerun() # FIXED: Changed to st.rerun()
+                st.success(f"Purchased '{item['name']}'! Enjoy your reward, Hunter.")
+                st.rerun()
             else:
                 st.error("Not enough Gold!")
 st.markdown("---")
 
+# --- DAILY QUESTS ---
 st.header("Daily Quests")
 for key, quest in QUESTS.items():
     is_completed = key in hunter['completed_daily_quests']
+    
     quest_col, button_col = st.columns([4, 1])
+    
     with quest_col:
         label = f"~~{quest['name']}~~" if is_completed else quest['name']
         mandatory = " `(MANDATORY)`" if quest.get("is_mandatory") else ""
         st.markdown(f"**{label}**{mandatory}\n\n*Reward: +{quest['xp']} XP, +{quest['gold']} G*")
+
     with button_col:
-        if st.button("Complete ✔️", key=key, disabled=is_completed, use_container_width=True):
-            hunter['xp'] += quest['xp']
-            hunter['gold'] += quest['gold']
-            stat, points = quest['stat_bonus']
-            hunter['stats'][stat] += points
-            hunter['completed_daily_quests'].append(key)
-            
-            if hunter['xp'] >= hunter['xp_to_next_level']:
-                hunter['level'] += 1
-                hunter['xp'] -= hunter['xp_to_next_level']
-                hunter['xp_to_next_level'] = int(BASE_XP * (hunter['level'] ** XP_MULTIPLIER))
-                hunter['skill_points'] += 5
-                st.balloons()
-                st.success(f"LEVEL UP! You are now Level {hunter['level']}!")
-            
-            st.rerun() # FIXED: Changed to st.rerun()
+        if is_completed:
+            if st.button("Undo ↩️", key=f"undo_{key}", use_container_width=True):
+                hunter['xp'] -= quest['xp']
+                hunter['gold'] -= quest['gold']
+                stat, points = quest['stat_bonus']
+                hunter['stats'][stat] -= points
+                hunter['completed_daily_quests'].remove(key)
+                st.warning(f"Reversed '{quest['name']}'.")
+                st.rerun()
+        else:
+            if st.button("Complete ✔️", key=key, use_container_width=True):
+                hunter['xp'] += quest['xp']
+                hunter['gold'] += quest['gold']
+                stat, points = quest['stat_bonus']
+                hunter['stats'][stat] += points
+                hunter['completed_daily_quests'].append(key)
+                st.success(f"Quest '{quest['name']}' completed! Well done.")
+                
+                if hunter['xp'] >= hunter['xp_to_next_level']:
+                    hunter['level'] += 1
+                    hunter['xp'] -= hunter['xp_to_next_level']
+                    hunter['xp_to_next_level'] = int(BASE_XP * (hunter['level'] ** XP_MULTIPLIER))
+                    hunter['skill_points'] += 5
+                    st.balloons()
+                    st.success(f"LEVEL UP! You are now Level {hunter['level']}!")
+                
+                st.rerun()
     st.markdown("---")
+
+# Manual Entry section for partial tasks
+st.header("Manual Entry / Partial Quest")
+with st.expander("Add XP for partial or unlisted tasks"):
+    manual_desc = st.text_input("Task Description (e.g., '1 hour AI course')")
+    manual_xp = st.number_input("XP Gained", min_value=0, step=10)
+    manual_gold = st.number_input("Gold Gained", min_value=0, step=1)
+    
+    if st.button("Add Custom XP"):
+        if manual_xp > 0 or manual_gold > 0:
+            hunter['xp'] += manual_xp
+            hunter['gold'] += manual_gold
+            st.success(f"Manually added '{manual_desc}'! +{manual_xp} XP, +{manual_gold} G.")
+            st.rerun()
+        else:
+            st.warning("Please enter some XP or Gold to add.")
