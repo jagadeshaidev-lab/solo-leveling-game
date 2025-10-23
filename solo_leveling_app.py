@@ -63,7 +63,7 @@ def load_history(hunter_name="Hunter", limit=5):
     """Loads the last few days of quest history."""
     db = initialize_firebase()
     history_ref = db.collection('hunters').document(hunter_name).collection('history')
-    query = history_ref.order_by(firestore.DOCUMENT_ID, direction=firestore.Query.DESCENDING).limit(limit)
+    query = history_ref.order_by("__name__", direction=firestore.Query.DESCENDING).limit(limit)
     docs = query.stream()
     return {doc.id: doc.to_dict() for doc in docs}
 
