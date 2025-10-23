@@ -134,18 +134,16 @@ with col1:
             save_data()
             st.rerun()
 
+# THIS IS THE CORRECT CODE
 with col2:
     st.subheader("System Store")
     for key, item in STORE_ITEMS.items():
-        cost = item['cost']
-        if st.button(f"Buy '{item['name']}' ({cost} G)", key=f"buy_{key}"):
-            # Gold check (if statement) has been removed.
-                hunter['gold'] -= cost
-                st.success(f"Purchased '{item['name']}'! Enjoy your reward, Hunter.")
-                save_data()
-                st.rerun()
-            else:
-                st.error("Not enough Gold!")
+        if st.button(f"Buy '{item['name']}' ({item['cost']} G)", key=f"buy_{key}"):
+            # Gold check is removed for the debt system.
+            hunter['gold'] -= item['cost']
+            st.success(f"Purchased '{item['name']}'! Your new balance is {hunter['gold']} G.")
+            save_data()
+            st.rerun()
 st.markdown("---")
 
 # --- DAILY QUESTS ---
