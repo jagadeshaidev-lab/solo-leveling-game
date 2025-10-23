@@ -146,16 +146,7 @@ with col1:
             hunter['stats'][stat_to_upgrade] += 1; hunter['skill_points'] -= 1
             save_data(); st.rerun()
 
-with col2:
-    st.subheader("System Store")
-    for key, item in STORE_ITEMS.items():
-        if st.button(f"Buy '{item['name']}' ({item['cost']} G)", key=f"buy_{key}"):
-            if hunter['gold'] >= item['cost']: # Re-added gold check for store
-                hunter['gold'] -= item['cost']
-                st.success(f"Purchased '{item['name']}'!")
-                save_data(); st.rerun()
-            else:
-                st.error("Not enough Gold!")
+
 st.markdown("---")
 
 # --- (MODIFIED) DAILY QUESTS with SLIDERS ---
