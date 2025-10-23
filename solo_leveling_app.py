@@ -8,14 +8,17 @@ from firebase_admin import credentials, firestore
 BASE_XP = 1000
 XP_MULTIPLIER = 1.5
 QUESTS = {
-    "server_check": {"name": "Morning Watchtower Scan (Servers)", "xp": 20, "gold": 2, "stat_bonus": ("wil", 1)},
-    "tickets": {"name": "Slaying the Assigned Beasts (Tickets)", "xp": 100, "gold": 10, "stat_bonus": ("intel", 1)},
-    "standup": {"name": "Evening War Council (Stand-up)", "xp": 30, "gold": 3, "stat_bonus": ("cha", 1)},
-    "gym": {"name": "The Iron Temple Ritual", "xp": 150, "gold": 15, "stat_bonus": ("str", 1)},
-    "ai": {"name": "The Sorcerer's Scroll (AI Course)", "xp": 200, "gold": 20, "stat_bonus": ("intel", 2), "is_mandatory": True},
-    "finance": {"name": "The Gold Guardian's Broadcast", "xp": 50, "gold": 5, "stat_bonus": ("fin", 1)},
-    "love": {"name": "The Alliance Call", "xp": 40, "gold": 4, "stat_bonus": ("cha", 1)},
-    "read": {"name": "The Oracle's Wisdom", "xp": 30, "gold": 3, "stat_bonus": ("intel", 1)}
+    # Work Quests - Spashtanga, Ardhamayyela
+    "server_check": {"name": "Daily System Check (Servers)", "xp": 20, "gold": 2, "stat_bonus": ("wil", 1)},
+    "tickets": {"name": "Resolve Daily Tickets", "xp": 100, "gold": 10, "stat_bonus": ("intel", 1)},
+    "standup": {"name": "Daily Progress Report (Stand-up)", "xp": 30, "gold": 3, "stat_bonus": ("cha", 1)},
+
+    # Personal Quests - Direct ga, Motivating ga
+    "gym": {"name": "Strength & Fitness Training (Gym)", "xp": 150, "gold": 15, "stat_bonus": ("str", 1)},
+    "ai": {"name": "Skill Upgrade: AI Course Study", "xp": 200, "gold": 20, "stat_bonus": ("intel", 2), "is_mandatory": True},
+    "finance": {"name": "Financial Market Study (Video)", "xp": 50, "gold": 5, "stat_bonus": ("fin", 1)},
+    "love": {"name": "Connect with Your Partner", "xp": 40, "gold": 4, "stat_bonus": ("cha", 1)},
+    "Meditation": {"name": "Daily Meditating", "xp": 30, "gold": 3, "stat_bonus": ("intel", 1)}
 }
 STORE_ITEMS = {
     "insta": {"name": "15 Mins Insta Scroll", "cost": 15},
