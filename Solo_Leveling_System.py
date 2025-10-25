@@ -7,15 +7,119 @@ from firebase_admin import credentials, firestore
 # --- CONFIG (No Changes) ---
 BASE_XP = 1000
 XP_MULTIPLIER = 1.5
-QUESTS = {
-    "server_check": {"name": "Morning Watchtower Scan (Servers)", "xp": 20, "gold": 2, "stat_bonus": ("wil", 1)},
-    "tickets": {"name": "Slaying the Assigned Beasts (Tickets)", "xp": 100, "gold": 10, "stat_bonus": ("intel", 1)},
-    "standup": {"name": "Evening War Council (Stand-up)", "xp": 30, "gold": 3, "stat_bonus": ("cha", 1)},
-    "gym": {"name": "The Iron Temple Ritual", "xp": 150, "gold": 15, "stat_bonus": ("str", 1)},
-    "ai": {"name": "The Sorcerer's Scroll (AI Course)", "xp": 200, "gold": 20, "stat_bonus": ("intel", 2), "is_mandatory": True},
-    "finance": {"name": "The Gold Guardian's Broadcast", "xp": 50, "gold": 5, "stat_bonus": ("fin", 1)},
-    "love": {"name": "The Alliance Call", "xp": 40, "gold": 4, "stat_bonus": ("cha", 1)},
-    "read": {"name": "The Oracle's Wisdom", "xp": 30, "gold": 3, "stat_bonus": ("intel", 1)}
+quests = {
+    # 🌅 Morning Rituals
+    "wake_early": {
+        "name": "Wake Up by 6:00 AM (Rise & Shine)",
+        "xp": 40,
+        "gold": 4,
+        "stat_bonus": ("wil", 1),
+        "is_mandatory": True
+    },
+    "gym_morning": {
+        "name": "Gym Workout (6:30–8:00 AM)",
+        "xp": 150,
+        "gold": 15,
+        "stat_bonus": ("str", 2)
+    },
+    "meditation": {
+        "name": "Meditate for 5–10 Minutes",
+        "xp": 30,
+        "gold": 3,
+        "stat_bonus": ("intel", 1)
+    },
+    "breakfast_1": {
+        "name": "Eat Proper Breakfast (Protein + Fiber)",
+        "xp": 35,
+        "gold": 3,
+        "stat_bonus": ("str", 1)
+    },
+
+    # 💻 Work Quests – Ardhamayyela Hustle
+    "server_check": {
+        "name": "Daily System Check (Servers @ 9 AM)",
+        "xp": 20,
+        "gold": 2,
+        "stat_bonus": ("wil", 1)
+    },
+    "ai_course_1": {
+        "name": "AI Course Study (10–11 AM)",
+        "xp": 200,
+        "gold": 20,
+        "stat_bonus": ("intel", 2),
+        "is_mandatory": True
+    },
+    "tickets": {
+        "name": "Resolve Assigned Tickets (11–12 PM)",
+        "xp": 100,
+        "gold": 10,
+        "stat_bonus": ("intel", 1)
+    },
+    "breakfast_2": {
+        "name": "Eat Healthy Lunch",
+        "xp": 35,
+        "gold": 3,
+        "stat_bonus": ("str", 1)
+    },
+    "hydration": {
+        "name": "Drink 3–4 Liters of Water",
+        "xp": 25,
+        "gold": 2,
+        "stat_bonus": ("str", 1)
+    },
+    "ai_course_2": {
+        "name": "AI Course Study (4–5 PM)",
+        "xp": 200,
+        "gold": 20,
+        "stat_bonus": ("intel", 2)
+    },
+
+    # 🌙 Evening Rituals
+    "walk_night": {
+        "name": "Night Walk (9–10 PM)",
+        "xp": 50,
+        "gold": 5,
+        "stat_bonus": ("wil", 1)
+    },
+    "standup": {
+        "name": "Daily Progress Report (Stand-up @ 8:30 PM)",
+        "xp": 30,
+        "gold": 3,
+        "stat_bonus": ("cha", 1),
+        "is_mandatory": True
+    },
+
+    # 🧠 Bonus Quests – Copilot’s Picks
+    "gratitude_journal": {
+        "name": "Write 3 Gratitude Points",
+        "xp": 20,
+        "gold": 2,
+        "stat_bonus": ("wil", 1)
+    },
+    "binaural_beats": {
+        "name": "Listen to 40Hz Gamma Beats (30 mins)",
+        "xp": 30,
+        "gold": 3,
+        "stat_bonus": ("intel", 1)
+    },
+    "posture_check": {
+        "name": "Correct Sitting Posture (Ergo Boost)",
+        "xp": 15,
+        "gold": 1,
+        "stat_bonus": ("str", 1)
+    },
+    "no_doomscrolling": {
+        "name": "Avoid Doomscrolling (Digital Discipline)",
+        "xp": 25,
+        "gold": 2,
+        "stat_bonus": ("wil", 1)
+    },
+    "send_meme": {
+        "name": "Send a Dank Meme to a Friend",
+        "xp": 10,
+        "gold": 1,
+        "stat_bonus": ("cha", 1)
+    }
 }
 STORE_ITEMS = {
     "insta": {"name": "15 Mins Insta Scroll", "cost": 15},
