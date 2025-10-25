@@ -1,34 +1,42 @@
-# pages/1_Hunter_Store.py
+# --- pages/1_Hunter_Store.py ---
+
 import streamlit as st
-
-# Check if the hunter has been initialized
-if 'hunter' not in st.session_state:
-    st.error("Please start from the main page first.")
-    st.stop()
-
-# Get the hunter data from the session state
-hunter = st.session_state.hunter
+# Access the tools from the core system
+from core_system import STORE_ITEMS, initialize_firebase, daily_reset_and_check, save_data
 
 st.set_page_config(page_title="Hunter Store", layout="wide")
-st.title("🛒 Hunter's Store")
+initialize_firebase() # Connect to Firebase
+daily_reset_and_check() # Ensure state is current and reset runs
+
+hunter = st.session_state.hunter
+
+st.title("System Store 🛒")
 st.markdown("---")
+st.info(f"**Current Gold (G):** `{hunter['gold']}`")
 
-st.info(f"Your current balance: **{hunter['gold']} G**")
+st.header("Rewards: Spend Gold for Downtime")
+st.warning("⚠️ WARNING: Purchasing items reduces your Willpower (WIL) stat by 1.")
 
-# Use the STORE_ITEMS dictionary from the main app
-# (We will need to define this again or import it later, for now, let's redefine)
-STORE_ITEMS = {
-    "insta": {"name": "15 Mins Insta Scroll", "cost": 15},
-    "tv": {"name": "1 Episode of a TV Show", "cost": 30},
-    "junk": {"name": "Order Junk Food (Cheat Meal)", "cost": 100},
-    "yt": {"name": "30 Mins YouTube Binge", "cost": 25}
-}
+cols = st.columns(3)
 
-for key, item in STORE_ITEMS.items():
-    if st.button(f"Buy '{item['name']}' ({item['cost']} G)", key=f"buy_{key}"):
-        if hunter['gold'] >= item['cost']:
-            hunter['gold'] -= item['cost']
-            st.success(f"Purchased '{item['name']}'! Your new balance is {hunter['gold']} G.")
-            # Note: We need a way to save this data. This will be our next challenge.
-        else:
-            st.error("Not enough Gold!")
+for i, (key, item) in enumerate(STORE_ITEMS.items()):
+    with cols[i % 3]: # Distribute items across 3 columns
+        st.subheader(item['name'])
+        st.markdown(f"Cost: **{item['cost']} G**")
+        
+        can_afford = hunter['gold'] >= item['cost']
+        
+        if st.button(f"Purchase '{item['name']}'", key=key, disabled=not can_afford, use_container_width=True):
+            if can_afford:
+                hunter['gold'] -= item['cost']
+                
+                # Penalty: Reduce Willpower
+                hunter['stats']['wil'] = max(1, hunter['stats']['wil'] - 1)
+                st.info("Your Willpower (WIL) stat decreased by 1.")
+                
+                st.success(f"PURCHASE SUCCESSFUL: You bought '{item['name']}'. -{item['cost']} Gold.")
+                
+                save_data()
+                st.rerun()
+            else:
+                st.error("INSUFFICIENT GOLD.")
