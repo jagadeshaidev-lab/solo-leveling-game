@@ -7,7 +7,7 @@ from firebase_admin import credentials, firestore
 # --- CONFIG (No Changes) ---
 BASE_XP = 1000
 XP_MULTIPLIER = 1.5
-quests = {
+QUESTS  = {
     # 🌅 Morning Rituals
     "wake_early": {
         "name": "Wake Up by 6:00 AM (Rise & Shine)",
