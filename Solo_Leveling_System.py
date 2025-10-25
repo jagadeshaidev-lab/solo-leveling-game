@@ -4,6 +4,21 @@ import streamlit as st
 # Import all necessary components from our new core system!
 from core_system import QUESTS, initialize_firebase, daily_reset_and_check, save_data, check_for_level_up
 
+
+# --- Solo_Leveling_System.py (Add this block near the top) ---
+
+# --- Custom CSS for Zoro Background ---
+def apply_custom_css():
+    """Loads and applies the custom CSS for the background image."""
+    try:
+        with open("style.css") as f:
+            st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+    except FileNotFoundError:
+        st.error("Error: style.css not found in the project directory.")
+
+apply_custom_css()
+# --------------------------------------
+
 # --- APP SETUP ---
 st.set_page_config(page_title="Solo Leveling System", layout="wide")
 initialize_firebase() # Initialize Firebase connection

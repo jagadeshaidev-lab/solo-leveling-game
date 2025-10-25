@@ -1,0 +1,30 @@
+/* --- style.css --- */
+[data-testid="stAppViewContainer"] {
+    /* 1. Set the background image (Replace the URL with your chosen Zoro image if you host it!) 
+       For now, we'll use a local/hypothetical path for setup. */
+    background-image: url("https://i.imgur.com/your-zoro-image-link.jpg"); 
+    
+    /* NOTE: Since you're using a Streamlit Cloud deployment or running locally,
+       using a hosted link (like Imgur) is the most reliable way for now.
+       Replace the placeholder URL above with the actual link to your Zoro image! */
+
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    
+    /* 2. Add a dark overlay for text readability (CRUCIAL) */
+    background-color: rgba(0, 0, 0, 0.7); /* Fallback color with a dark transparency */
+    background-blend-mode: darken;
+}
+
+/* 3. Make sure the sidebar background is also dark for seamless look */
+[data-testid="stSidebar"] {
+    background-color: #0d0d0d !important;
+}
+
+/* 4. Optional: Increase contrast for title text */
+h1 {
+    color: #f7b731; /* A nice gold/yellow color */
+    text-shadow: 2px 2px 4px #000000;
+}
