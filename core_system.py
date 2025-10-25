@@ -124,10 +124,10 @@ QUESTS  = {
     }
 }
 STORE_ITEMS = {
-    "insta": {"name": "15 Mins Insta Scroll", "cost": 15},
-    "tv": {"name": "1 Episode of a TV Show", "cost": 30},
-    "junk": {"name": "Order Junk Food (Cheat Meal)", "cost": 100},
-    "yt": {"name": "30 Mins YouTube Binge", "cost": 25}
+    "insta": {"name": "15 Min of 🅾  𝐈𝐧𝐬𝐭𝐚𝐠𝐫𝐚𝐦 ", "cost": 15},
+    "tv": {"name": "1 Episode of a TV Show 📺", "cost": 30},
+    "junk": {"name": "Order Junk Food 🍔", "cost": 100},
+    "yt": {"name": "30 Mins YouTube ▶️", "cost": 25}
 }
 
 
