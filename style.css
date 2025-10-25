@@ -2,7 +2,7 @@
 [data-testid="stAppViewContainer"] {
     /* 1. Set the background image (Replace the URL with your chosen Zoro image if you host it!) 
        For now, we'll use a local/hypothetical path for setup. */
-    background-image: url("https://i.imgur.com/G5wFfWT.jpeg"); 
+    background-image: url("https://i.pinimg.com/originals/c0/64/74/c0647403ecfe9f3779a400f7ca56a860.jpg"); 
     
     /* NOTE: Since you're using a Streamlit Cloud deployment or running locally,
        using a hosted link (like Imgur) is the most reliable way for now.
