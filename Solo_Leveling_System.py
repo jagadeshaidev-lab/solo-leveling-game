@@ -7,7 +7,7 @@ from core_system import QUESTS, initialize_firebase, daily_reset_and_check, save
 # --- APP SETUP ---
 st.set_page_config(page_title="Solo Leveling System", layout="wide")
 initialize_firebase() # Initialize Firebase connection
-daily_reset_and_check()   # Run daily login/reset logic
+daily_reset_and_check()  # Run daily login/reset logic
 
 hunter = st.session_state.hunter
 
