@@ -7,7 +7,7 @@ from core_system import QUESTS, initialize_firebase, daily_reset_and_check, save
 # --- APP SETUP ---
 st.set_page_config(page_title="Solo Leveling System", layout="wide")
 initialize_firebase() # Initialize Firebase connection
-daily_reset_and_check()  # Run daily login/reset logic
+daily_reset_and_check() # Run daily login/reset logic
 
 hunter = st.session_state.hunter
 
@@ -44,54 +44,65 @@ with col1:
 
 st.markdown("---")
 
-# --- DAILY QUESTS with SLIDERS ---
+# --- DAILY QUESTS with TAB/BUTTON CHOICES ---
 st.header("Today's Quests")
+
+# Define the fixed percentage options
+PERCENTAGE_OPTIONS = [0, 30, 50, 70, 100]
+
 for key, quest in QUESTS.items():
     is_completed = key in hunter['completed_daily_quests']
     
-    quest_col, slider_col, button_col = st.columns([3, 2, 1])
+    quest_col, radio_col, button_col = st.columns([3, 2, 1])
     
     with quest_col:
-        # Use an attribute from session_state to track the slider's value before logging
-        completion_percent_key = f"completion_percent_{key}"
-        if completion_percent_key not in st.session_state:
-            st.session_state[completion_percent_key] = 0
+        # State to hold the current selected percentage
+        percentage_key = f"selected_percent_{key}"
+        if percentage_key not in st.session_state:
+            st.session_state[percentage_key] = 0
 
         label = f"✅ {quest['name']}" if is_completed else quest['name']
         mandatory = " `(MANDATORY)`" if quest.get("is_mandatory") else ""
         st.markdown(f"**{label}**{mandatory}\n\n*Reward: +{quest['xp']} XP, +{quest['gold']} G*")
 
     if not is_completed:
-        with slider_col:
-            # The slider now updates a separate session state variable
-            st.session_state[completion_percent_key] = st.slider(
-                "Completion %", 0, 100, st.session_state[completion_percent_key], 
-                key=f"slider_{key}", label_visibility="collapsed"
+        with radio_col:
+            # Use st.radio for the tab/button feel (horizontal layout)
+            st.session_state[percentage_key] = st.radio(
+                "Completion %",
+                options=PERCENTAGE_OPTIONS,
+                index=0, # Start at 0%
+                horizontal=True, # Makes it look like small tabs/buttons
+                key=f"radio_{key}", 
+                label_visibility="collapsed"
             )
+
         with button_col:
-            if st.button("Log Progress", key=key, use_container_width=True):
-                percentage = st.session_state[completion_percent_key]
+            percentage = st.session_state[percentage_key]
+            
+            # The Log button is only enabled if the selected percentage is > 0
+            if st.button("Log Progress", key=key, use_container_width=True, disabled=(percentage == 0)):
                 
-                if percentage > 0:
-                    xp_gained = int(quest['xp'] * (percentage / 100))
-                    gold_gained = int(quest['gold'] * (percentage / 100))
+                xp_gained = int(quest['xp'] * (percentage / 100))
+                gold_gained = int(quest['gold'] * (percentage / 100))
+                
+                hunter['xp'] += xp_gained
+                hunter['gold'] += gold_gained
+                
+                # Update stats
+                stat, points = quest['stat_bonus']
+                stat_gained = int(points * (percentage / 100))
+                if stat_gained > 0:
+                    hunter['stats'][stat] += stat_gained
                     
-                    hunter['xp'] += xp_gained
-                    hunter['gold'] += gold_gained
-                    
-                    # Update stats
-                    stat, points = quest['stat_bonus']
-                    stat_gained = int(points * (percentage / 100))
-                    if stat_gained > 0:
-                        hunter['stats'][stat] += stat_gained
-                        
-                    # Mark as completed (even partial completion logs the effort)
-                    hunter['completed_daily_quests'].append(key)
-                    st.success(f"Logged {percentage}% for '{quest['name']}'. +{xp_gained} XP, +{gold_gained} G.")
-                    
-                    # Check for level up after gaining XP
-                    check_for_level_up() # This function handles level up and saves data
-                    
-                    save_data()
-                    st.rerun()
+                # Mark as completed (even partial completion logs the effort)
+                hunter['completed_daily_quests'].append(key)
+                st.success(f"Logged {percentage}% for '{quest['name']}'. +{xp_gained} XP, +{gold_gained} G.")
+                
+                # Check for level up after gaining XP
+                check_for_level_up() # This function handles level up and saves data
+                
+                save_data()
+                st.rerun()
+                
     st.markdown("---")
