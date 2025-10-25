@@ -27,11 +27,37 @@ st.progress(xp_percent, text=f"XP: {hunter['xp']} / {hunter['xp_to_next_level']}
 st.markdown("---")
 
 # --- STATS & UPGRADE ---
+def get_wil_status(wil):
+    if wil >= 7:
+        return "👑 Elite Discipline"
+    elif wil >= 5:
+        return "💪 Focused"
+    else:
+        return "😩 Temptation ↑"
+
 col1, col2 = st.columns(2)
 with col1:
     st.subheader("Hunter Stats")
     stats = hunter['stats']
-    st.markdown(f"**💪 STR:** `{stats['str']}` **🧠 INT:** `{stats['intel']}` **🧘 WIL:** `{stats['wil']}` **💰 FIN:** `{stats['fin']}` **🤝 CHA:** `{stats['cha']}`")
+    
+# --- STATS & UPGRADE ---
+def get_wil_status(wil):
+    if wil >= 7:
+        return "👑 Elite Discipline"
+    elif wil >= 5:
+        return "💪 Focused"
+    else:
+        return "😩 Temptation ↑"
+
+col1, col2 = st.columns(2)
+with col1:
+    st.subheader("Hunter Stats")
+    stats = hunter['stats']
+    
+    # NEW STAT DISPLAY with WIL Status
+    wil_status = get_wil_status(stats['wil'])
+    st.markdown(f"**💪 STR:** `{stats['str']}` **🧠 INT:** `{stats['intel']}` **💰 FIN:** `{stats['fin']}` **🤝 CHA:** `{stats['cha']}`")
+    st.markdown(f"**🧘 WIL:** `{stats['wil']}` — **Status:** **{wil_status}**")
     
     if hunter['skill_points'] > 0:
         st.subheader(f"Skill Points to Allocate: {hunter['skill_points']}")
