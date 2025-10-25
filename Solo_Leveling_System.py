@@ -2,7 +2,7 @@
 
 import streamlit as st
 # Import all necessary components from our new core system!
-from core_system import QUESTS, initialize_firebase, daily_reset_and_check, save_data, check_for_level_up
+from core_system import  initialize_firebase, daily_reset_and_check, save_data, check_for_level_up ,QUESTS
 
 
 # --- Solo_Leveling_System.py (Add this block near the top) ---
