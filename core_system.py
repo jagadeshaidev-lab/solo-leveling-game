@@ -37,7 +37,7 @@ QUESTS  = {
         "stat_bonus": ("str", 1)
     },
 
-    # 💻 Work Quests – Ardhamayyela Hustle
+    # 💻 Work Quests   Ardhamayyela Hustle
     "server_check": {
         "name": "Daily System Check (Servers @ 9 AM)",
         "xp": 20,
@@ -45,14 +45,14 @@ QUESTS  = {
         "stat_bonus": ("wil", 1)
     },
     "ai_course_1": {
-        "name": "AI Course Study (10–11 AM)",
+        "name": "AI Course Study (10-11 AM)",
         "xp": 200,
         "gold": 20,
         "stat_bonus": ("intel", 2),
         "is_mandatory": True
     },
     "tickets": {
-        "name": "Resolve Assigned Tickets (11–12 PM)",
+        "name": "Resolve Assigned Tickets (11-12 PM)",
         "xp": 100,
         "gold": 10,
         "stat_bonus": ("intel", 1)
@@ -64,16 +64,34 @@ QUESTS  = {
         "stat_bonus": ("str", 1)
     },
     "hydration": {
-        "name": "Drink 3–4 Liters of Water",
+        "name": "Drink 3-4 Liters of Water",
         "xp": 25,
         "gold": 2,
         "stat_bonus": ("str", 1)
     },
     "ai_course_2": {
+        "name": "AI Course Study (4-5 PM)",
+        "xp": 200,
+        "gold": 20,
+        "stat_bonus": ("intel", 2)
+    },
+
+    # --- core_system.py (Under Work Quests) ---
+ 
+    "ai_course_2": {
         "name": "AI Course Study (4–5 PM)",
         "xp": 200,
         "gold": 20,
         "stat_bonus": ("intel", 2)
+    },
+    
+    # --- NEW WEEKLY FOCUS QUEST ---
+    "deep_focus_weekly": {
+        "name": "Deep Focus (Weekly Target: 8+ Hours Logged via Forest)",
+        "xp": 1000,
+        "gold": 100,
+        "stat_bonus": ("intel", 5),
+        "is_weekly": True
     },
 
     # 🌙 Evening Rituals
@@ -91,7 +109,7 @@ QUESTS  = {
         "is_mandatory": True
     },
 
-    # 🧠 Bonus Quests – Copilot’s Picks
+    # 🧠 Bonus Quests   Copilot’s Picks
     "gratitude_journal": {
         "name": "Write 3 Gratitude Points",
         "xp": 20,
