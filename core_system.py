@@ -75,15 +75,6 @@ QUESTS  = {
         "gold": 20,
         "stat_bonus": ("intel", 2)
     },
-
-    # --- core_system.py (Under Work Quests) ---
- 
-    "ai_course_2": {
-        "name": "AI Course Study (4–5 PM)",
-        "xp": 200,
-        "gold": 20,
-        "stat_bonus": ("intel", 2)
-    },
     
     # --- NEW WEEKLY FOCUS QUEST ---
     "deep_focus_weekly": {
