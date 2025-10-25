@@ -8,17 +8,14 @@ from firebase_admin import credentials, firestore
 BASE_XP = 1000
 XP_MULTIPLIER = 1.5
 QUESTS = {
-    # Work Quests - Spashtanga, Ardhamayyela
-    "server_check": {"name": "Daily System Check (Servers)", "xp": 20, "gold": 2, "stat_bonus": ("wil", 1)},
-    "tickets": {"name": "Resolve Daily Tickets", "xp": 100, "gold": 10, "stat_bonus": ("intel", 1)},
-    "standup": {"name": "Daily Progress Report (Stand-up)", "xp": 30, "gold": 3, "stat_bonus": ("cha", 1)},
-
-    # Personal Quests - Direct ga, Motivating ga
-    "gym": {"name": "Strength & Fitness Training (Gym)", "xp": 150, "gold": 15, "stat_bonus": ("str", 1)},
-    "ai": {"name": "Skill Upgrade: AI Course Study", "xp": 200, "gold": 20, "stat_bonus": ("intel", 2), "is_mandatory": True},
-    "finance": {"name": "Financial Market Study (Video)", "xp": 50, "gold": 5, "stat_bonus": ("fin", 1)},
-    "love": {"name": "Connect with Your Partner", "xp": 40, "gold": 4, "stat_bonus": ("cha", 1)},
-    "Meditation": {"name": "Daily Meditating", "xp": 30, "gold": 3, "stat_bonus": ("intel", 1)}
+    "server_check": {"name": "Morning Watchtower Scan (Servers)", "xp": 20, "gold": 2, "stat_bonus": ("wil", 1)},
+    "tickets": {"name": "Slaying the Assigned Beasts (Tickets)", "xp": 100, "gold": 10, "stat_bonus": ("intel", 1)},
+    "standup": {"name": "Evening War Council (Stand-up)", "xp": 30, "gold": 3, "stat_bonus": ("cha", 1)},
+    "gym": {"name": "The Iron Temple Ritual", "xp": 150, "gold": 15, "stat_bonus": ("str", 1)},
+    "ai": {"name": "The Sorcerer's Scroll (AI Course)", "xp": 200, "gold": 20, "stat_bonus": ("intel", 2), "is_mandatory": True},
+    "finance": {"name": "The Gold Guardian's Broadcast", "xp": 50, "gold": 5, "stat_bonus": ("fin", 1)},
+    "love": {"name": "The Alliance Call", "xp": 40, "gold": 4, "stat_bonus": ("cha", 1)},
+    "read": {"name": "The Oracle's Wisdom", "xp": 30, "gold": 3, "stat_bonus": ("intel", 1)}
 }
 STORE_ITEMS = {
     "insta": {"name": "15 Mins Insta Scroll", "cost": 15},
@@ -61,14 +58,6 @@ def load_data(hunter_name="Hunter"):
         return doc.to_dict()
     return None
 
-# --- (NEW) FUNCTION TO LOAD HISTORY ---
-def load_history(hunter_name="Hunter", limit=5):
-    """Loads the last few days of quest history."""
-    db = initialize_firebase()
-    history_ref = db.collection('hunters').document(hunter_name).collection('history')
-    query = history_ref.order_by("__name__", direction=firestore.Query.DESCENDING).limit(limit)
-    docs = query.stream()
-    return {doc.id: doc.to_dict() for doc in docs}
 
 
 # --- STATE INITIALIZATION (No changes) ---
@@ -197,22 +186,3 @@ for key, quest in QUESTS.items():
                     st.rerun()
     st.markdown("---")
 
-# --- (REMOVED) MANUAL ENTRY SECTION ---
-
-# --- (NEW) HISTORY SECTION ---
-st.header("Recent History")
-with st.expander("View your logbook from the past 5 days"):
-    history = load_history(hunter['name'], limit=5)
-    if not history:
-        st.write("No history found yet. Start completing quests!")
-    else:
-        for date_str, data in history.items():
-            st.subheader(f"📅 {date_str}")
-            completed_today = data.get('completed_quests', [])
-            
-            for quest_key, quest_details in QUESTS.items():
-                if quest_key in completed_today:
-                    st.markdown(f"- ✅ ~~{quest_details['name']}~~")
-                else:
-                    st.markdown(f"- ❌ {quest_details['name']}")
-            st.markdown("---")
