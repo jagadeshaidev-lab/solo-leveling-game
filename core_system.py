@@ -249,7 +249,7 @@ def daily_reset_and_check():
 def check_for_level_up():
     """Checks if the Hunter has enough XP to level up."""
     hunter = st.session_state.hunter
-    if hunter['xp'] >= hunter['xp_to_next_level']:
+    while hunter['xp'] >= hunter['xp_to_next_level']:
         hunter['level'] += 1
         hunter['xp'] -= hunter['xp_to_next_level']
         hunter['xp_to_next_level'] = int(BASE_XP * (hunter['level'] ** XP_MULTIPLIER))
