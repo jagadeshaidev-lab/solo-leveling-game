@@ -9,6 +9,8 @@ on:
     - cron: '30 3 * * *'
     # Runs at 2:30 PM UTC, which is 8:00 PM IST
     - cron: '30 14 * * *'
+    # Runs at 3:30 PM UTC, which is 9:45 PM IST
+    - cron: '15 16 * * *'
     
   # This allows you to run this workflow manually from the Actions tab on GitHub
   workflow_dispatch:
