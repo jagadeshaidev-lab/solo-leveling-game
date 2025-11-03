@@ -1,0 +1,32 @@
+# .github/workflows/daily_notifications.yml
+
+name: Daily Hunter Notifications
+
+on:
+  # This makes the job run on a schedule
+  schedule:
+    # Runs at 3:30 AM UTC, which is 9:00 AM IST
+    - cron: '30 3 * * *'
+    # Runs at 2:30 PM UTC, which is 8:00 PM IST
+    - cron: '30 14 * * *'
+    
+  # This allows you to run this workflow manually from the Actions tab on GitHub
+  workflow_dispatch:
+
+jobs:
+  send-notification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install requests pytz
+
+      - name: Run Notifier Script
+        run: python notifier.py

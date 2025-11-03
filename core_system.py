@@ -194,8 +194,15 @@ def initialize_state():
                 "xp_to_next_level": int(BASE_XP), "gold": 0, "skill_points": 0,
                 "stats": {"str": 5, "intel": 5, "wil": 5, "fin": 5, "cha": 5},
                 "last_login": "2000-01-01", 
-                "completed_daily_quests": []
+                "completed_daily_quests": [],
+                "daily_limits": {"instagram_mins": 30, "youtube_mins": 45},
+                "eod_report_submitted_today": False
             }
+
+        if 'daily_limits' not in st.session_state.hunter:
+            st.session_state.hunter['daily_limits'] = {"instagram_mins": 30, "youtube_mins": 45}
+        if 'eod_report_submitted_today' not in st.session_state.hunter:
+            st.session_state.hunter['eod_report_submitted_today'] = False
 
 def daily_reset_and_check():
     """Checks for missed mandatory quests from yesterday and resets state for today."""
