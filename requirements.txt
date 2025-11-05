@@ -1,2 +1,8 @@
+# requirements.txt (The Final Version)
+
 streamlit
-firebase-admin
+firebase-admin>=6.5.0
+pandas
+requests
+pytz
+twilio
