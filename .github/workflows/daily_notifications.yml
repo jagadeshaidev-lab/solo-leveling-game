@@ -1,18 +1,11 @@
-# .github/workflows/daily_notifications.yml
+# .github/workflows/daily_notifications.yml (The Forensic Debugging Version)
 
 name: Daily Hunter Notifications
 
 on:
-  # This makes the job run on a schedule
   schedule:
-    # Runs at 3:30 AM UTC, which is 9:00 AM IST
     - cron: '30 3 * * *'
-    # Runs at 2:30 PM UTC, which is 8:00 PM IST
     - cron: '30 14 * * *'
-    # Runs at 3:30 PM UTC, which is 9:45 PM IST
-    - cron: '55 16 * * *'
-    
-  # This allows you to run this workflow manually from the Actions tab on GitHub
   workflow_dispatch:
 
 jobs:
@@ -27,13 +20,25 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install dependencies
+      # --- DEBUG STEP 1: Asalu files unnaya? ---
+      - name: DEBUG - List files in workspace
+        run: ls -l
+
+      # --- DEBUG STEP 2: requirements.txt lo em undi? ---
+      - name: DEBUG - Show contents of requirements.txt
+        run: cat requirements.txt
+
+      # --- INSTALLATION STEP ---
+      - name: Install dependencies from requirements.txt
         run: pip install -r requirements.txt
 
-      # In .github/workflows/daily_notifications.yml
+      # --- DEBUG STEP 3: Anni install ayyaya? ---
+      - name: DEBUG - List installed packages
+        run: pip list
 
+      # --- FINAL SCRIPT RUN ---
       - name: Run Notifier Script
-        env: # <-- IKKADA EE KOTHA SECTION ADD CHEYALI
+        env:
           TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
           TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
           TWILIO_FROM_NUMBER: ${{ secrets.TWILIO_FROM_NUMBER }}
