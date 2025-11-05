@@ -1,7 +1,7 @@
 # requirements.txt (The Final Version)
 
 streamlit
-firebase-admin>=6.5.0
+firebase-admin>=7.1.0
 pandas
 requests
 pytz
