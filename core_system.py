@@ -266,16 +266,17 @@ def check_for_level_up():
         save_data()
         st.rerun()
 
+# In core_system.py - The Plan B version
+
 def load_history_data(limit=30):
-    """Fetches the last N days of quest history from Firebase as a DataFrame."""
+    """Fetches history and sorts it in Python (avoids FieldPath)."""
     try:
         db = initialize_firebase()
         hunter_name = st.session_state.hunter['name']
         
+        # Firestore ni sort cheyamani adagakunda, just documents techesko
         history_ref = db.collection('hunters').document(hunter_name).collection('history')
-        
-        # Query the last N documents, ordered by date (descending)
-        docs = history_ref.order_by(firestore.FieldPath.document_id(), direction=firestore.Query.DESCENDING).limit(limit).stream()
+        docs = history_ref.limit(limit).stream() # Get documents, limit here is just a safety
         
         data_list = []
         for doc in docs:
@@ -291,10 +292,15 @@ def load_history_data(limit=30):
                 'End Gold': day.get('gold_at_day_end', 0)
             })
             
-        # Reverse the list so the oldest date is at the top for proper charting
-        data_list.reverse() 
-        return pd.DataFrame(data_list)
+        if not data_list:
+            return pd.DataFrame()
+
+        # Ippudu manam Python lo (Pandas tho) sort cheddam
+        df = pd.DataFrame(data_list)
+        df_sorted = df.sort_values(by='Date', ascending=False) # Sort by date (descending)
+        
+        return df_sorted
 
     except Exception as e:
-        st.error(f"Error loading history: {e}") # Commented out to prevent errors in core module
+        st.error(f"Error loading history: {e}")
         return pd.DataFrame()
