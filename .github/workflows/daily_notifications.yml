@@ -1,11 +1,11 @@
-# .github/workflows/daily_notifications.yml (The Forensic Debugging Version)
+# .github/workflows/daily_notifications.yml (The Final Correct Version)
 
 name: Daily Hunter Notifications
 
 on:
   schedule:
-    - cron: '30 3 * * *'
-    - cron: '30 14 * * *'
+    - cron: '30 3 * * *'    # 9:00 AM IST
+    - cron: '30 14 * * *'   # 8:00 PM IST
   workflow_dispatch:
 
 jobs:
@@ -20,23 +20,10 @@ jobs:
         with:
           python-version: '3.10'
 
-      # --- DEBUG STEP 1: Asalu files unnaya? ---
-      - name: DEBUG - List files in workspace
-        run: ls -l
-
-      # --- DEBUG STEP 2: requirements.txt lo em undi? ---
-      - name: DEBUG - Show contents of requirements.txt
-        run: cat requirements.txt
-
-      # --- INSTALLATION STEP ---
-      - name: Install dependencies from requirements.txt
+      # THIS IS THE CRITICAL FIX
+      - name: Install all dependencies from requirements.txt
         run: pip install -r requirements.txt
 
-      # --- DEBUG STEP 3: Anni install ayyaya? ---
-      - name: DEBUG - List installed packages
-        run: pip list
-
-      # --- FINAL SCRIPT RUN ---
       - name: Run Notifier Script
         env:
           TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
