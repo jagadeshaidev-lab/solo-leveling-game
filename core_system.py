@@ -296,5 +296,5 @@ def load_history_data(limit=30):
         return pd.DataFrame(data_list)
 
     except Exception as e:
-        # st.error(f"Error loading history: {e}") # Commented out to prevent errors in core module
+        st.error(f"Error loading history: {e}") # Commented out to prevent errors in core module
         return pd.DataFrame()
