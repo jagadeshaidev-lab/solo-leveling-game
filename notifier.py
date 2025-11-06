@@ -7,7 +7,7 @@ import os  # <-- KOTHAGA IMPORT CHEYI
 from twilio.rest import Client  # <-- KOTHAGA IMPORT CHEYI
 
 # ----------------- NTFY CONFIGURATION -----------------
-NTFY_TOPIC = "my-secret-hunter-channel" 
+NTFY_TOPIC = "solo-leveling-badri-system-alert-2025" 
 
 # ----------------- TWILIO CONFIGURATION -----------------
 # Ee details manam GitHub Secrets nunchi teeskuntam
