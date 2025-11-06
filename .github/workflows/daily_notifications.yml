@@ -1,4 +1,4 @@
-# .github/workflows/daily_notifications.yml (The Final Correct Version)
+# .github/workflows/daily_notifications.yml (The Final Correct Indentation)
 
 name: Daily Hunter Notifications
 
@@ -12,18 +12,21 @@ jobs:
   send-notification:
     runs-on: ubuntu-latest
     steps:
+      # Step 1: Get the code
       - name: Checkout Repository
         uses: actions/checkout@v3
 
+      # Step 2: Set up Python environment
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      # THIS IS THE CRITICAL FIX
+      # Step 3: Install ALL libraries from the list (CORRECT INDENTATION)
       - name: Install all dependencies from requirements.txt
         run: pip install -r requirements.txt
 
+      # Step 4: Run the script (CORRECT INDENTATION)
       - name: Run Notifier Script
         env:
           TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
