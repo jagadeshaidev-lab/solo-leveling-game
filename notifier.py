@@ -39,18 +39,25 @@ def send_ntfy_notification(message, title, tags=""):
 
 def send_whatsapp_notification(title, message):
     """Sends a notification via Twilio WhatsApp Sandbox."""
-    if not all([TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM_NUMBER, YOUR_WHATSAPP_NUMBER]):
-        print("[WhatsApp] Twilio credentials are not set. Skipping.")
+    
+    # --- FIX IS HERE: We get the credentials INSIDE the function ---
+    account_sid = os.environ.get("TWILIO_ACCOUNT_SID")
+    auth_token = os.environ.get("TWILIO_AUTH_TOKEN")
+    from_number = os.environ.get("TWILIO_FROM_NUMBER")
+    to_number = os.environ.get("YOUR_WHATSAPP_NUMBER")
+    
+    if not all([account_sid, auth_token, from_number, to_number]):
+        print("[WhatsApp] Twilio credentials are not set or are empty. Skipping.")
         return
 
     try:
-        client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+        client = Client(account_sid, auth_token)
         full_message = f"*{title}*\n\n{message}"
         
         msg = client.messages.create(
             body=full_message,
-            from_=TWILIO_FROM_NUMBER,
-            to=YOUR_WHATSAPP_NUMBER
+            from_=from_number,
+            to=to_number
         )
         print("[WhatsApp] Notification sent successfully!")
     except Exception as e:
