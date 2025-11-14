@@ -87,7 +87,7 @@ if __name__ == "__main__":
     print(f"Script triggered at hour: {current_hour} (IST)")
 
     # Check if it's time for the EOD Report (e.g., 9 PM)
-    if True: # 9 PM
+    if  current_hour == 22: # 10 PM
         db = initialize_firebase()
         if db:
             generate_and_send_eod_report(db)
