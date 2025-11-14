@@ -1,105 +1,96 @@
-# --- notifier.py (The Corrected and Cleaned Version) ---
+# --- notifier.py (The FINAL, All-in-One Version) ---
 
-import requests
-import datetime
-import pytz
 import os
 import json
+import datetime
+import pytz
 import random
-from twilio.rest import Client
 import firebase_admin
 from firebase_admin import credentials, firestore
+from twilio.rest import Client
 
 # ----------------- CONFIGURATION -----------------
-NTFY_TOPIC = "solo-leveling-badri-system-alert-2025" 
-
-TWILIO_ACCOUNT_SID = os.environ.get("AC383e2107cac16a848fcd411b8e599f0c")
-TWILIO_AUTH_TOKEN = os.environ.get("4697aebd9d7b2cebe2181645f63f918b")
-TWILIO_FROM_NUMBER = os.environ.get("whatsapp:+14155238886")
-YOUR_WHATSAPP_NUMBER = os.environ.get("whatsapp:+919154625353")
-
+# All secrets will be fetched from GitHub Secrets
+NTFY_TOPIC = "solo-leveling-badri-system-alert-2025"
+TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
+TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
+TWILIO_FROM_NUMBER = os.environ.get("TWILIO_FROM_NUMBER")
+YOUR_WHATSAPP_NUMBER = os.environ.get("YOUR_WHATSAPP_NUMBER")
 FIREBASE_CREDS_JSON_STRING = os.environ.get("FIREBASE_CREDS_JSON")
 
-# --- MESSAGE POOL FOR RANDOM MESSAGES ---
-MESSAGE_POOL = {
-    6:  [ "Creator, nee system activate aindi... Arise.", "The sun is up, Hunter. The weak are still asleep. This is your chance to get ahead. Gym awaits.", "Another day to prove your worth. Don't just build the system, become the system. Let's start with STR." ],
-    14: [ "Creator, progress stagnate avvanivvaku... Log your quests.", "Data is everything. Without logs, progress is just a feeling. I need data. Update your status now.", "Don't break the chain. Every quest you log today strengthens the habit for tomorrow. Submit your progress." ]
-}
-
-# ----------------- SENDER FUNCTIONS -----------------
-
-def send_ntfy_notification(message, title, tags=""):
-    """Sends a notification to your ntfy.sh topic."""
-    try:
-        # (Ntfy logic goes here, for now we pass)
-        print(f"[NTFY] Would send: {title} - {message}")
-        pass
-    except Exception as e:
-        print(f"Failed to send ntfy notification: {e}")
-
+# ----------------- SENDER FUNCTION -----------------
 def send_whatsapp_notification(title, message):
-    """Sends a notification via Twilio WhatsApp Sandbox."""
-    
-    # --- FIX IS HERE: We get the credentials INSIDE the function ---
-    account_sid = os.environ.get("TWILIO_ACCOUNT_SID")
-    auth_token = os.environ.get("TWILIO_AUTH_TOKEN")
-    from_number = os.environ.get("TWILIO_FROM_NUMBER")
-    to_number = os.environ.get("YOUR_WHATSAPP_NUMBER")
-    
-    if not all([account_sid, auth_token, from_number, to_number]):
+    """Sends a WhatsApp message using Twilio credentials from environment variables."""
+    if not all([TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM_NUMBER, YOUR_WHATSAPP_NUMBER]):
         print("[WhatsApp] Twilio credentials are not set or are empty. Skipping.")
         return
-
     try:
-        client = Client(account_sid, auth_token)
+        client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
         full_message = f"*{title}*\n\n{message}"
-        
-        msg = client.messages.create(
-            body=full_message,
-            from_=from_number,
-            to=to_number
-        )
+        client.messages.create(body=full_message, from_=TWILIO_FROM_NUMBER, to=YOUR_WHATSAPP_NUMBER)
         print("[WhatsApp] Notification sent successfully!")
     except Exception as e:
         print(f"[WhatsApp] Failed to send notification: {e}")
 
 # ----------------- FIREBASE & REPORTING FUNCTIONS -----------------
-
-def initialize_firebase_for_notifier():
-    # ... (This function is the same as before, no changes needed)
-    pass # Placeholder
+def initialize_firebase():
+    """Initializes Firebase using credentials from environment variables."""
+    if not firebase_admin._apps:
+        if FIREBASE_CREDS_JSON_STRING:
+            try:
+                creds_dict = json.loads(FIREBASE_CREDS_JSON_STRING)
+                creds = credentials.Certificate(creds_dict)
+                firebase_admin.initialize_app(creds)
+                print("[Firebase] Initialized successfully.")
+                return firestore.client()
+            except Exception as e:
+                print(f"[Firebase] CRITICAL ERROR initializing: {e}")
+                return None
+        else:
+            print("[Firebase] Credentials JSON not found in environment.")
+            return None
+    return firestore.client()
 
 def generate_and_send_eod_report(db):
-    # ... (This function is the same as before, no changes needed)
-    pass # Placeholder
+    """Fetches data from Firebase, generates an EOD report, and sends it via WhatsApp."""
+    print("[EOD Report] Starting report generation...")
+    try:
+        hunter_ref = db.collection('hunters').document('Hunter')
+        hunter_doc = hunter_ref.get()
+        if not hunter_doc.exists:
+            print("[EOD Report] Error: Hunter document not found.")
+            return
+
+        hunter_data = hunter_doc.to_dict()
+        completed_today = len(hunter_data.get('completed_daily_quests', []))
+        total_quests = 18 # You can adjust this number
+
+        title = f"👑 Monarch's EOD Report: {datetime.date.today().isoformat()} 👑"
+        message = (
+            f"Quests Completed Today: {completed_today}/{total_quests}\n"
+            f"Current Level: {hunter_data.get('level', 'N/A')}\n"
+            f"XP Progress: {hunter_data.get('xp', 0)}/{hunter_data.get('xp_to_next_level', 'N/A')}\n"
+            f"Final Gold: {hunter_data.get('gold', 0)} G\n\n"
+            "Report generated automatically. Your efforts have been recorded. Rest and prepare for tomorrow's ascent."
+        )
+        send_whatsapp_notification(title, message)
+        print("[EOD Report] Report sent successfully.")
+    except Exception as e:
+        print(f"[EOD Report] CRITICAL ERROR generating report: {e}")
 
 # ----------------- MAIN EXECUTION LOGIC -----------------
-
-def get_notification_content(current_hour):
-    if current_hour in MESSAGE_POOL:
-        message = random.choice(MESSAGE_POOL[current_hour])
-        if current_hour == 6: title = "⏰ The Grind Begins"
-        elif current_hour == 14: title = "📝 Afternoon Status Report"
-        else: title = "System Notification"
-        return title, message, "tada"
-    return None, None, None
-
 if __name__ == "__main__":
     IST = pytz.timezone('Asia/Kolkata')
     now_ist = datetime.datetime.now(IST)
     current_hour = now_ist.hour
 
-    if current_hour == 21:
-        # EOD Report Logic
-        db = initialize_firebase_for_notifier()
+    print(f"Script triggered at hour: {current_hour} (IST)")
+
+    # Check if it's time for the EOD Report (e.g., 9 PM)
+    if current_hour == 21: # 9 PM
+        db = initialize_firebase()
         if db:
             generate_and_send_eod_report(db)
     else:
-        # Normal Message Logic
-        title, message, tags = get_notification_content(current_hour)
-        if title and message:
-            print(f"Sending notification for hour {current_hour}: '{title}'")
-            send_ntfy_notification(message, title, tags)
-            send_whatsapp_notification(title, message)
-        else:
-            print(f"No notification scheduled for hour {current_hour}.")
+        # Here you can add logic for other times (e.g., morning motivation)
+        print(f"No special task scheduled for hour {current_hour}. Exiting.")
