@@ -82,7 +82,8 @@ def generate_and_send_eod_report(db):
 if __name__ == "__main__":
     IST = pytz.timezone('Asia/Kolkata')
     now_ist = datetime.datetime.now(IST)
-    current_hour = now_ist.hour
+    #current_hour = now_ist.hour
+    current_hour = 22  # For testing purposes, set to 10 PM
 
     print(f"Script triggered at hour: {current_hour} (IST)")
 
