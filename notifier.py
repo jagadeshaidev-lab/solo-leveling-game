@@ -13,10 +13,10 @@ from firebase_admin import credentials, firestore
 # ----------------- CONFIGURATION -----------------
 NTFY_TOPIC = "solo-leveling-badri-system-alert-2025" 
 
-TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
-TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
-TWILIO_FROM_NUMBER = os.environ.get("TWILIO_FROM_NUMBER")
-YOUR_WHATSAPP_NUMBER = os.environ.get("YOUR_WHATSAPP_NUMBER")
+TWILIO_ACCOUNT_SID = os.environ.get("AC383e2107cac16a848fcd411b8e599f0c")
+TWILIO_AUTH_TOKEN = os.environ.get("4697aebd9d7b2cebe2181645f63f918b")
+TWILIO_FROM_NUMBER = os.environ.get("whatsapp:+14155238886")
+YOUR_WHATSAPP_NUMBER = os.environ.get("whatsapp:+919154625353")
 
 FIREBASE_CREDS_JSON_STRING = os.environ.get("FIREBASE_CREDS_JSON")
 
