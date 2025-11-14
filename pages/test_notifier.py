@@ -1,7 +1,10 @@
-# --- test_notifier.py ---
-# This file is ONLY for local testing. DO NOT PUSH TO GITHUB.
-
+# In test_notifier.py
 import os
+import sys
+import pathlib
+
+# Add the main project folder to the path, so it can find 'notifier.py'
+sys.path.append(str(pathlib.Path(__file__).parent.parent))
 
 # --- STEP A: PASTE YOUR REAL SECRETS HERE ---
 # Ikkada nee 5 real secrets ni paste chey
