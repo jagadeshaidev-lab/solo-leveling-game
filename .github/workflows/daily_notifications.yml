@@ -1,37 +1,34 @@
-# .github/workflows/daily_notifications.yml (The Final Correct Indentation)
+# .github/workflows/daily_notifications.yml (The FINAL Production Version)
 
 name: Daily Hunter Notifications
 
 on:
   schedule:
-    - cron: '30 3 * * *'    # 9:00 AM IST
-    - cron: '30 14 * * *'   # 8:00 PM IST
+    # Runs at 21:30 IST (16:00 UTC) for the EOD Report
+    - cron: '0 16 * * *'
   workflow_dispatch:
 
 jobs:
   send-notification:
     runs-on: ubuntu-latest
     steps:
-      # Step 1: Get the code
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up Python environment
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      # Step 3: Install ALL libraries from the list (CORRECT INDENTATION)
       - name: Install all dependencies from requirements.txt
         run: pip install -r requirements.txt
 
-      # Step 4: Run the script (CORRECT INDENTATION)
       - name: Run Notifier Script
         env:
+          # Pass all 5 secrets to the script
           TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
           TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
           TWILIO_FROM_NUMBER: ${{ secrets.TWILIO_FROM_NUMBER }}
           YOUR_WHATSAPP_NUMBER: ${{ secrets.YOUR_WHATSAPP_NUMBER }}
-          FIREBASE_CREDS_JSON: ${{ secrets.FIREBASE_CREDS_JSON }} # <-- EE KOTHA LINE ADD CHEY
+          FIREBASE_CREDS_JSON: ${{ secrets.FIREBASE_CREDS_JSON }}
         run: python notifier.py
