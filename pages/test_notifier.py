@@ -23,6 +23,7 @@ os.environ['FIREBASE_CREDS_JSON'] = '''{
   "universe_domain": "googleapis.com"
 }'''
 
+
 # --- STEP B: IMPORT THE REAL NOTIFIER SCRIPT ---
 # Ippudu manam mana asalu script ni import chestunnam
 from notifier import initialize_firebase_for_notifier, generate_and_send_eod_report
