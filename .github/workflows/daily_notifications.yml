@@ -1,31 +1,23 @@
 # .github/workflows/daily_notifications.yml (The FINAL Production Version)
-
 name: Daily Hunter Notifications
-
 on:
   schedule:
-    # Runs at 21:30 IST (16:00 UTC) for the EOD Report
-    - cron: '0 16 * * *'
+    - cron: '0 16 * * *' # 9:30 PM IST
   workflow_dispatch:
-
 jobs:
   send-notification:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
-
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-
       - name: Install all dependencies from requirements.txt
         run: pip install -r requirements.txt
-
       - name: Run Notifier Script
         env:
-          # Pass all 5 secrets to the script
           TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
           TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
           TWILIO_FROM_NUMBER: ${{ secrets.TWILIO_FROM_NUMBER }}
