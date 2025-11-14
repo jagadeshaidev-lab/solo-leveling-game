@@ -1,65 +1,89 @@
-# --- notifier.py (The Upgraded Version) ---
+# --- notifier.py (The "Data Scientist" Version) ---
 
 import requests
 import datetime
 import pytz
-import os  # <-- KOTHAGA IMPORT CHEYI
-from twilio.rest import Client  # <-- KOTHAGA IMPORT CHEYI
+import os
+import json # <-- Kotha import
+from twilio.rest import Client
+import firebase_admin # <-- Kotha import
+from firebase_admin import credentials, firestore # <-- Kotha import
 
-# ----------------- NTFY CONFIGURATION -----------------
-NTFY_TOPIC = "solo-leveling-badri-system-alert-2025" 
+# ----------------- CONFIGURATION -----------------
+# ... (ntfy and twilio config antha same to same) ...
 
-# ----------------- TWILIO CONFIGURATION -----------------
-# Ee details manam GitHub Secrets nunchi teeskuntam
-TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
-TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
-TWILIO_FROM_NUMBER = os.environ.get("TWILIO_FROM_NUMBER") # e.g., 'whatsapp:+14155238886'
-YOUR_WHATSAPP_NUMBER = os.environ.get("YOUR_WHATSAPP_NUMBER") # e.g., 'whatsapp:+919876543210'
+# --- NEW: Firebase Configuration ---
+FIREBASE_CREDS_JSON_STRING = os.environ.get("FIREBASE_CREDS_JSON")
 
-# --- FUNCTION 1: Ntfy (Already undi) ---
-def send_notification(message, title, tags=""):
-    # ... (ee function lo em change ledu) ...
-    pass # Just for example
+# ----------------- FUNCTIONS -----------------
+# ... (send_ntfy_notification and send_whatsapp_notification functions antha same) ...
 
-# --- FUNCTION 2: WhatsApp (Kotha function) ---
-def send_whatsapp_notification(message, title):
-    """Sends a notification via Twilio WhatsApp Sandbox."""
-    if not all([TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM_NUMBER, YOUR_WHATSAPP_NUMBER]):
-        print("Twilio credentials are not set. Skipping WhatsApp notification.")
-        return
+# --- NEW: Function to Connect to Firebase ---
+def initialize_firebase_for_notifier():
+    if not firebase_admin._apps:
+        if FIREBASE_CREDS_JSON_STRING:
+            try:
+                creds_dict = json.loads(FIREBASE_CREDS_JSON_STRING)
+                creds = credentials.Certificate(creds_dict)
+                firebase_admin.initialize_app(creds)
+                print("Firebase initialized successfully for notifier.")
+                return firestore.client()
+            except Exception as e:
+                print(f"Error initializing Firebase: {e}")
+                return None
+        else:
+            print("Firebase credentials not found in environment.")
+            return None
+    return firestore.client()
 
+# --- NEW: Function to Generate and Send EOD Report ---
+def generate_and_send_eod_report(db):
     try:
-        client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-        full_message = f"*{title}*\n\n{message}" # WhatsApp lo title bold ga kanipistundi
-        
-        message = client.messages.create(
-            body=full_message,
-            from_=TWILIO_FROM_NUMBER,
-            to=YOUR_WHATSAPP_NUMBER
-        )
-        print(f"WhatsApp notification sent successfully!")
-    except Exception as e:
-        print(f"Failed to send WhatsApp notification: {e}")
+        doc_ref = db.collection('hunters').document('Hunter')
+        doc = doc_ref.get()
+        if doc.exists:
+            hunter = doc.to_dict()
+            
+            # --- History nunchi aa roju data teeskundam ---
+            today_str = datetime.datetime.now(pytz.timezone('Asia/Kolkata')).strftime('%Y-%m-%d')
+            history_ref = doc_ref.collection('history').document(today_str)
+            history_doc = history_ref.get()
+            
+            completed_count = 0
+            if history_doc.exists:
+                completed_count = len(history_doc.to_dict().get('completed_quests', []))
+            
+            total_quests = 20 # Hardcoding for now, as QUESTS dict is not here
 
+            # --- Report Prepare Cheyadam ---
+            summary_title = f"👑 MONARCH'S EOD REPORT: {today_str} 👑"
+            summary_body = (
+                f"Quests Completed Today: {completed_count}/{total_quests}\n"
+                f"Current Level: {hunter.get('level', 'N/A')}\n"
+                f"XP Progress: {hunter.get('xp', 0)}/{hunter.get('xp_to_next_level', 'N/A')}\n"
+                f"Final Gold: {hunter.get('gold', 0)} G\n\n"
+                "Report generated automatically. Your efforts have been recorded. Rest and prepare for tomorrow's ascent."
+            )
+            final_message = f"{summary_title}\n\n{summary_body}"
+            
+            send_whatsapp_notification("EOD Report", final_message) # Note: Title and message swapped for WhatsApp
+        else:
+            print("Hunter document not found.")
+    except Exception as e:
+        print(f"Error generating EOD report: {e}")
 
 if __name__ == "__main__":
     IST = pytz.timezone('Asia/Kolkata')
     now_ist = datetime.datetime.now(IST)
+    current_hour = now_ist.hour
 
-    # ... (existing time logic antha same) ...
-    if 6 <= now_ist.hour < 12:
-        title = "🌅 Rise and Shine, Hunter!"
-        message = "A new day has begun. Your daily quests are waiting. Let's get stronger today!"
-        tags = "sunrise,partying_face"
-    elif 19 <= now_ist.hour < 22:
-        title = "🌙 Evening Report Due"
-        message = "The day is ending. Don't forget to log your quests and submit your EOD Vigilance report."
-        tags = "night_with_stars,clipboard"
+    # --- Night 9 PM (21:00) ki EOD Report pampali ---
+    if current_hour == 21:
+        print("Time to generate and send EOD report...")
+        db = initialize_firebase_for_notifier()
+        if db:
+            generate_and_send_eod_report(db)
     else:
-        title = "System Check-in"
-        message = "Just checking in, Hunter. Keep up the hustle."
-        tags = "robot_face"
-        
-    # Ippudu manam rendu functions ni call chestunnam
-    send_notification(message, title, tags)
-    send_whatsapp_notification(message, title)
+        # --- Migatha time lo, normal motivational messages pampali ---
+        # ... (mana paatha get_notification_content logic ikkada pettukovachu) ...
+        print(f"No EOD report scheduled for hour {current_hour}. Exiting.")
