@@ -12,7 +12,7 @@ os.environ['TWILIO_ACCOUNT_SID'] = "AC383e2107cac16a848fcd411b8e599f0c"
 os.environ['TWILIO_AUTH_TOKEN'] = "4697aebd9d7b2cebe2181645f63f918b"
 os.environ['TWILIO_FROM_NUMBER'] = "whatsapp:+14155238886"
 os.environ['YOUR_WHATSAPP_NUMBER'] = "whatsapp:+919154625353"
-os.environ['FIREBASE_CREDS_JSON'] = '''{
+os.environ['FIREBASE_CREDS_JSON'] = r'''{
   "type": "service_account",
   "project_id": "solo-leveling-tracker-65341",
   "private_key_id": "7e8f6a50e29b57c18022a6248fae3f4726ed521b",
