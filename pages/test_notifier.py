@@ -10,7 +10,7 @@ sys.path.append(str(pathlib.Path(__file__).parent.parent))
 
 # --- STEP A: PASTE YOUR REAL SECRETS HERE ---
 os.environ['TWILIO_ACCOUNT_SID'] = "AC383e2107cac16a848fcd411b8e599f0c"
-os.environ['TWILIO_AUTH_TOKEN'] = "4697aebd9d7b2cebe2181645f63f918b" # Nee real token ikkada pettu
+os.environ['TWILIO_AUTH_TOKEN'] = "7034bf6b813850b7b5b9447f65be9392" # Nee real token ikkada pettu
 os.environ['TWILIO_FROM_NUMBER'] = "whatsapp:+14155238886"
 os.environ['YOUR_WHATSAPP_NUMBER'] = "whatsapp:+919154625353"
 # NOTE: Firebase creds are not needed for this test
