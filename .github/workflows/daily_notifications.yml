@@ -33,4 +33,5 @@ jobs:
           TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
           TWILIO_FROM_NUMBER: ${{ secrets.TWILIO_FROM_NUMBER }}
           YOUR_WHATSAPP_NUMBER: ${{ secrets.YOUR_WHATSAPP_NUMBER }}
+          FIREBASE_CREDS_JSON: ${{ secrets.FIREBASE_CREDS_JSON }} # <-- EE KOTHA LINE ADD CHEY
         run: python notifier.py
