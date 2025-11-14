@@ -1,9 +1,11 @@
-# In test_notifier.py
+# --- test_notifier.py (The "Forced Run" Version) ---
+# This file is ONLY for local testing. DO NOT PUSH TO GITHUB.
+
 import os
 import sys
 import pathlib
 
-# Add the main project folder to the path, so it can find 'notifier.py'
+# Fix for ModuleNotFoundError when running from a subfolder
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
 
 # --- STEP A: PASTE YOUR REAL SECRETS HERE ---
@@ -26,26 +28,24 @@ os.environ['FIREBASE_CREDS_JSON'] = r'''{
   "universe_domain": "googleapis.com"
 }'''
 
-
 # --- STEP B: IMPORT THE REAL NOTIFIER SCRIPT ---
-# Ippudu manam mana asalu script ni import chestunnam
 from notifier import initialize_firebase_for_notifier, generate_and_send_eod_report
 
-print("--- STARTING LOCAL TEST ---")
+print("--- STARTING LOCAL FORCED TEST ---")
 
-# --- STEP C: RUN THE TEST ---
+# --- STEP C: RUN THE TEST, IGNORING THE TIME CHECK ---
 print("Attempting to initialize Firebase...")
 db = initialize_firebase_for_notifier()
 
 if db:
     print("\nFirebase connection successful!")
-    print("Attempting to generate and send EOD report to WhatsApp...")
+    print("FORCE-RUNNING the EOD report function now...")
     
-    # Run the main function from our original script
+    # Manam direct ga function ni call chestunnam, time check lekunda!
     generate_and_send_eod_report(db)
     
     print("\nTest function execution finished.")
 else:
     print("\nFirebase connection FAILED. Check your FIREBASE_CREDS_JSON.")
 
-print("--- LOCAL TEST COMPLETE ---")
+print("--- LOCAL FORCED TEST COMPLETE ---")
