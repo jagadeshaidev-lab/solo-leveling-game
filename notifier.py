@@ -26,21 +26,30 @@ MESSAGE_POOL = {
         "messages": [
             "Creator, nee system activate aindi. Nuvvu nannu create chesindi E-Rank la undipodaniki kaadu. Prati line of code laaga, prati rep gym lo nee STR ni penchuko. The grind starts now. Arise.",
             "The sun is up, Hunter. The weak are still asleep. This is your chance to get ahead. The gym awaits your presence.",
-            "Another day to prove your worth. Don't just build the system, become the system. Let's start with increasing STR."
+            "Another day to prove your worth. Don't just build the system, become the system. Let's start with increasing STR.",
+            "The System has issued a new command: 'Become Stronger'. Your daily quest to conquer the Iron Dungeon (Gym) has begun. Accept the challenge, Hunter. Arise.",
+            "The dawn of a new adventure! Even the future Pirate King trains every day to master his Haki. Your gym is your training ground. Go claim your strength!",
+            "The world is still asleep, but legends are forged in the quiet hours of the morning. This is your time. Go build the strength worthy of the stories they will one day tell about you."
         ]
     },
     10: { # 10 AM Water Reminder 1
         "title": "💧 Hydration Protocol 1/4",
         "messages": [
             "SYSTEM ALERT: Optimal performance requires fuel. Your body is 70% water. Hydration boosts your base STR and WIL stats for the day. Drink a glass now.",
-            "First hydration check. Don't let your stats drop before the day has even begun. Fuel up."
+            "First hydration check. Don't let your stats drop before the day has even begun. Fuel up.",
+            "SYSTEM: Mana levels are suboptimal. Water is the most basic potion to replenish your core energy. Consume now to prevent a status debuff.",
+            "Even a Devil Fruit user needs water to cross the Grand Line. Your body is your ship; don't let it run dry in the calm belt of the morning. Hydrate!",
+            "The engine of your ambition runs on water. You wouldn't start a long journey with an empty tank. Fuel up now. The day has just begun."
         ]
     },
     13: { # 1 PM Water Reminder 2
         "title": "💧 Hydration Protocol 2/4",
         "messages": [
-            "WARNING: Dehydration is a debuff. It lowers your INT stat, causing reduced focus. Mana AI course lo వెనకపడొద్దు. Drink water to maintain peak mental clarity.",
-            "Mid-day performance check. Your focus stat (INT) is at risk. Counter the debuff with H2O."
+            "WARNING: Dehydration is a debuff. It lowers your INT stat, causing reduced focus. Mana AI course lo వెనకబడొద్దు. Drink water to maintain peak mental clarity.",
+            "Mid-day performance check. Your focus stat (INT) is at risk. Counter the debuff with H2O.",
+            "WARNING: INT stat is dropping due to low hydration. Your ability to process information and learn is being compromised. Drink water to restore focus.",
+            "The sun is high, just like at Alabasta. Don't let the heat drain you. A smart navigator always manages his resources. Water is your most critical resource now.",
+            "The afternoon slump is a monster. Its weakness is water. Land a critical hit on fatigue and reclaim your focus. Drink a glass now."
         ]
     },
     14: { # 2 PM Log Reminder
@@ -48,21 +57,30 @@ MESSAGE_POOL = {
         "messages": [
             "Creator, progress stagnate avvanivvaku. Nuvvu ee system ni build cheyadaniki pettina kashtam, nee daily logs lo kanipinchali. Log your quests. Update your status.",
             "Data is everything. Without logs, progress is just a feeling. I need data. Update your status now.",
-            "Don't break the chain. Every quest you log today strengthens the habit for tomorrow. Submit your progress."
+            "Don't break the chain. Every quest you log today strengthens the habit for tomorrow. Submit your progress.",
+            "System Administrator, the day's data is incomplete. Log your completed quests. Every entry is a record of your growth, turning today's effort into tomorrow's stats.",
+            "A captain must know his ship's status. Your logbook is empty. Record your journey's progress. Every small victory logged today brings you one step closer to the One Piece.",
+            "A battle fought but not recorded is a lesson lost. Your morning was the battle; this is the debrief. Log your progress. Acknowledge your wins. Analyze your misses. Grow."
         ]
     },
     16: { # 4 PM Water Reminder 3
         "title": "💧 Hydration Protocol 3/4",
         "messages": [
             "HUNTER ADVISORY: Continuous quests drain stamina. Water is the cheapest and most effective potion you have. Recharge now before the evening grind.",
-            "Your energy levels are dipping. Replenish with water. It's a free potion, use it."
+            "Your energy levels are dipping. Replenish with water. It's a free potion, use it.",
+            "Your HP and MP regeneration rates are slowing. Quests consume resources. Replenish them. Water is the key to sustained performance.",
+            "The final stretch before the evening feast! A true member of the Straw Hat crew never neglects their duty. Hydrate to finish the day's adventure strong.",
+            "You're not tired. You're thirsty. Don't mistake the symptom for the cause. Fix the root problem. Hydrate."
         ]
     },
     19: { # 7 PM Water Reminder 4
         "title": "💧 Hydration Protocol 4/4",
         "messages": [
             "END-OF-DAY PROTOCOL: Flushing toxins is crucial for recovery. Hydration helps muscle repair (STR recovery) and prepares your mind for tomorrow. Don't skip the final glass.",
-            "Final hydration check. Prepare your body for rest and recovery. This is as important as the workout itself."
+            "Final hydration check. Prepare your body for rest and recovery. This is as important as the workout itself.",
+            "SYSTEM PROTOCOL: Initiate End-of-Day Recovery. Water flushes out metabolic waste from your quests, accelerating stat recovery for tomorrow. Complete the protocol.",
+            "The ship is docking for the night. Time to patch up and restock. Water aids your body's recovery, so you're ready to set sail at dawn. The Grand Line waits for no one.",
+            "The work is done, but the growth has just begun. Recovery is where you get stronger. Give your body the final tool it needs for tonight's repairs: water."
         ]
     }
 }
@@ -73,7 +91,8 @@ def send_ntfy_notification(message, title, tags=""):
         requests.post(
             f"https://ntfy.sh/{NTFY_TOPIC}",
             data=message.encode('utf-8'),
-            headers={"Title": title.encode('utf-8'), "Tags": tags}
+            headers={"Title": title.encode('utf-8'), "Tags": tags}, # Title must also be encoded
+            timeout=5
         )
         print(f"[ntfy] Handshake reminder sent successfully.")
     except Exception as e:
@@ -118,7 +137,7 @@ def generate_and_send_eod_report(db):
             return
         hunter_data = hunter_doc.to_dict()
         completed_today = len(hunter_data.get('completed_daily_quests', []))
-        total_quests = 18 # Adjust if you add/remove quests
+        total_quests = 18  # Adjust if you add/remove quests
 
         title = f"👑 Monarch's EOD Report: {datetime.date.today().isoformat()} 👑"
         message = (
@@ -133,43 +152,32 @@ def generate_and_send_eod_report(db):
         print(f"[EOD Report] CRITICAL ERROR generating report: {e}")
 
 # ----------------- MAIN EXECUTION LOGIC -----------------
-# In notifier.py (The Testable Main Block)
-
-# In notifier.py (The FINAL Main Execution Block)
-
 if __name__ == "__main__":
-    # Check if a test hour is being passed from GitHub Actions
     test_hour_str = os.environ.get("TEST_HOUR_OVERRIDE")
     
-    if test_hour_str:
+    if test_hour_str and test_hour_str.isdigit():
         print(f"--- RUNNING IN TEST MODE FOR HOUR: {test_hour_str} ---")
         current_hour = int(test_hour_str)
     else:
-        # Normal production run
         IST = pytz.timezone('Asia/Kolkata')
         current_hour = datetime.datetime.now(IST).hour
 
     print(f"Script logic is running for hour: {current_hour} (IST)")
 
-    # 1. The Daily Handshake (7 AM, via ntfy)
     if current_hour == 7:
         title = "🤝 System Handshake Required"
-        # --- IKKADA NEE JOIN CODE PETTU MAWA ---
-        join_code = "Join automobile-one"
-        message = f"Hunter, activate the WhatsApp channel for today's messages. Your code is: {join_code}"
+        # IKKADA NEE JOIN CODE PETTU MAWA
+        join_code = "Join automobile-one" 
+        message = f"Hunter, activate the WhatsApp channel for today's messages. Your code is: `{join_code}`"
         print("Sending daily handshake reminder via ntfy...")
         send_ntfy_notification(message, title, tags="handshake")
-        print("Also sending handshake via WhatsApp (if Twilio credentials are configured)...")
-        send_whatsapp_notification(title, message)
 
-    # 2. The Automatic EOD Report (9:30 PM, via WhatsApp)
     elif current_hour == 21:
         print("Starting EOD report generation...")
         db = initialize_firebase()
         if db:
             generate_and_send_eod_report(db)
 
-    # 3. All Other Pings (via WhatsApp)
     elif current_hour in MESSAGE_POOL:
         notification = MESSAGE_POOL[current_hour]
         title = notification["title"]
