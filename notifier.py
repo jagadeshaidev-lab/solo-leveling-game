@@ -155,10 +155,12 @@ if __name__ == "__main__":
     if current_hour == 7:
         title = "🤝 System Handshake Required"
         # --- IKKADA NEE JOIN CODE PETTU MAWA ---
-        join_code = "Join automobile-one" 
+        join_code = "Join automobile-one"
         message = f"Hunter, activate the WhatsApp channel for today's messages. Your code is: {join_code}"
         print("Sending daily handshake reminder via ntfy...")
         send_ntfy_notification(message, title, tags="handshake")
+        print("Also sending handshake via WhatsApp (if Twilio credentials are configured)...")
+        send_whatsapp_notification(title, message)
 
     # 2. The Automatic EOD Report (9:30 PM, via WhatsApp)
     elif current_hour == 21:
