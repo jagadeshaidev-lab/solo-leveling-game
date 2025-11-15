@@ -88,13 +88,16 @@ MESSAGE_POOL = {
 # ----------------- SENDER FUNCTIONS -----------------
 def send_ntfy_notification(message, title, tags=""):
     try:
-        requests.post(
+        resp = requests.post(
             f"https://ntfy.sh/{NTFY_TOPIC}",
             data=message.encode('utf-8'),
-            headers={"Title": title.encode('utf-8'), "Tags": tags}, # Title must also be encoded
+            headers={"Title": title, "Tags": tags},
             timeout=5
         )
-        print(f"[ntfy] Handshake reminder sent successfully.")
+        if resp.ok:
+            print(f"[ntfy] Notification sent successfully (status {resp.status_code}).")
+        else:
+            print(f"[ntfy] Failed to send notification: status={resp.status_code} body={resp.text}")
     except Exception as e:
         print(f"[ntfy] Failed to send notification: {e}")
 
@@ -103,9 +106,17 @@ def send_whatsapp_notification(title, message):
         print("[WhatsApp] Twilio credentials are not set. Skipping.")
         return
     try:
+        def _ensure_whatsapp_prefix(num):
+            if not num:
+                return num
+            return num if num.startswith("whatsapp:") else f"whatsapp:{num}"
+
+        from_num = _ensure_whatsapp_prefix(TWILIO_FROM_NUMBER)
+        to_num = _ensure_whatsapp_prefix(YOUR_WHATSAPP_NUMBER)
+
         client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
         full_message = f"*{title}*\n\n{message}"
-        client.messages.create(body=full_message, from_=TWILIO_FROM_NUMBER, to=YOUR_WHATSAPP_NUMBER)
+        client.messages.create(body=full_message, from_=from_num, to=to_num)
         print(f"[WhatsApp] Notification sent successfully for: {title}")
     except Exception as e:
         print(f"[WhatsApp] Failed to send notification: {e}")
