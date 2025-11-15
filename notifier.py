@@ -135,6 +135,8 @@ def generate_and_send_eod_report(db):
 # ----------------- MAIN EXECUTION LOGIC -----------------
 # In notifier.py (The Testable Main Block)
 
+# In notifier.py (The FINAL Main Execution Block)
+
 if __name__ == "__main__":
     # Check if a test hour is being passed from GitHub Actions
     test_hour_str = os.environ.get("TEST_HOUR_OVERRIDE")
@@ -151,18 +153,27 @@ if __name__ == "__main__":
 
     # 1. The Daily Handshake (7 AM, via ntfy)
     if current_hour == 7:
-        # ... (same code as before)
-        pass
+        title = "🤝 System Handshake Required"
+        # --- IKKADA NEE JOIN CODE PETTU MAWA ---
+        join_code = "Join automobile-one" 
+        message = f"Hunter, activate the WhatsApp channel for today's messages. Your code is: {join_code}"
+        print("Sending daily handshake reminder via ntfy...")
+        send_ntfy_notification(message, title, tags="handshake")
 
     # 2. The Automatic EOD Report (9:30 PM, via WhatsApp)
     elif current_hour == 21:
-        # ... (same code as before)
-        pass
+        print("Starting EOD report generation...")
+        db = initialize_firebase()
+        if db:
+            generate_and_send_eod_report(db)
 
     # 3. All Other Pings (via WhatsApp)
     elif current_hour in MESSAGE_POOL:
-        # ... (same code as before)
-        pass
+        notification = MESSAGE_POOL[current_hour]
+        title = notification["title"]
+        message = random.choice(notification["messages"])
+        print(f"Sending scheduled WhatsApp ping for hour {current_hour}: '{title}'")
+        send_whatsapp_notification(title, message)
 
     else:
         print(f"No special task scheduled for hour {current_hour}. Exiting.")
