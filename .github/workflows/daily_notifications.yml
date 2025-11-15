@@ -19,6 +19,11 @@ on:
     - cron: '0 16 * * *'    # 9:30 PM IST
     
   workflow_dispatch:
+    inputs:
+      test_hour:
+        description: 'Enter the hour (IST) to test (e.g., 7 for 7 AM, 21 for 9 PM)'
+        required: true
+        default: '6'
 
 jobs:
   send-notification:
@@ -37,10 +42,6 @@ jobs:
 
       - name: Run Notifier Script
         env:
-          # Pass all 5 secrets to the script
-          TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
-          TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
-          TWILIO_FROM_NUMBER: ${{ secrets.TWILIO_FROM_NUMBER }}
-          YOUR_WHATSAPP_NUMBER: ${{ secrets.YOUR_WHATSAPP_NUMBER }}
-          FIREBASE_CREDS_JSON: ${{ secrets.FIREBASE_CREDS_JSON }}
+          # ... (all your 5 secrets are here) ...
+          TEST_HOUR_OVERRIDE: ${{ github.event.inputs.test_hour }} # <-- EE KOTHA LINE ADD CHEY
         run: python notifier.py
