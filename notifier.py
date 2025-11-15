@@ -19,6 +19,10 @@ TWILIO_FROM_NUMBER = os.environ.get("TWILIO_FROM_NUMBER")
 YOUR_WHATSAPP_NUMBER = os.environ.get("YOUR_WHATSAPP_NUMBER")
 FIREBASE_CREDS_JSON_STRING = os.environ.get("FIREBASE_CREDS_JSON")
 
+#----------------- API LINKS -----------------
+SOLO_LEVELING_API_URL = "https://solo-leveling-game-badri.streamlit.app/"
+
+
 # --- MESSAGE POOL FOR RANDOMIZED PINGS ---
 MESSAGE_POOL = {
     6: { # 6 AM Gym Motivation
@@ -31,7 +35,7 @@ MESSAGE_POOL = {
             "The dawn of a new adventure! Even the future Pirate King trains every day to master his Haki. Your gym is your training ground. Go claim your strength!",
             "The world is still asleep, but legends are forged in the quiet hours of the morning. This is your time. Go build the strength worthy of the stories they will one day tell about you."
         ]
-    },
+    }, 
     10: { # 10 AM Water Reminder 1
         "title": "💧 Hydration Protocol 1/4",
         "messages": [
@@ -55,12 +59,12 @@ MESSAGE_POOL = {
     14: { # 2 PM Log Reminder
         "title": "📝 Afternoon Status Report",
         "messages": [
-            "Creator, progress stagnate avvanivvaku. Nuvvu ee system ni build cheyadaniki pettina kashtam, nee daily logs lo kanipinchali. Log your quests. Update your status.",
-            "Data is everything. Without logs, progress is just a feeling. I need data. Update your status now.",
-            "Don't break the chain. Every quest you log today strengthens the habit for tomorrow. Submit your progress.",
-            "System Administrator, the day's data is incomplete. Log your completed quests. Every entry is a record of your growth, turning today's effort into tomorrow's stats.",
-            "A captain must know his ship's status. Your logbook is empty. Record your journey's progress. Every small victory logged today brings you one step closer to the One Piece.",
-            "A battle fought but not recorded is a lesson lost. Your morning was the battle; this is the debrief. Log your progress. Acknowledge your wins. Analyze your misses. Grow."
+            f"Creator, progress stagnate avvanivvaku. Nuvvu ee system ni build cheyadaniki pettina kashtam, nee daily logs lo kanipinchali. Log your quests. Update your status.{SOLO_LEVELING_API_URL}",
+            f"Data is everything. Without logs, progress is just a feeling. I need data. Update your status now. {SOLO_LEVELING_API_URL}",
+            f"Don't break the chain. Every quest you log today strengthens the habit for tomorrow. Submit your progress. {SOLO_LEVELING_API_URL}",
+            f"System Administrator, the day's data is incomplete. Log your completed quests. Every entry is a record of your growth, turning today's effort into tomorrow's stats. {SOLO_LEVELING_API_URL}",
+            f"A captain must know his ship's status. Your logbook is empty. Record your journey's progress. Every small victory logged today brings you one step closer to the One Piece. {SOLO_LEVELING_API_URL}",
+            f"A battle fought but not recorded is a lesson lost. Your morning was the battle; this is the debrief. Log your progress. Acknowledge your wins. Analyze your misses. Grow. {SOLO_LEVELING_API_URL}"
         ]
     },
     16: { # 4 PM Water Reminder 3
