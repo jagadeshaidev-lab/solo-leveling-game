@@ -133,31 +133,36 @@ def generate_and_send_eod_report(db):
         print(f"[EOD Report] CRITICAL ERROR generating report: {e}")
 
 # ----------------- MAIN EXECUTION LOGIC -----------------
+# In notifier.py (The Testable Main Block)
+
 if __name__ == "__main__":
-    IST = pytz.timezone('Asia/Kolkata')
-    current_hour = datetime.datetime.now(IST).hour
-    print(f"Script triggered at hour: {current_hour} (IST)")
+    # Check if a test hour is being passed from GitHub Actions
+    test_hour_str = os.environ.get("TEST_HOUR_OVERRIDE")
+    
+    if test_hour_str:
+        print(f"--- RUNNING IN TEST MODE FOR HOUR: {test_hour_str} ---")
+        current_hour = int(test_hour_str)
+    else:
+        # Normal production run
+        IST = pytz.timezone('Asia/Kolkata')
+        current_hour = datetime.datetime.now(IST).hour
+
+    print(f"Script logic is running for hour: {current_hour} (IST)")
 
     # 1. The Daily Handshake (7 AM, via ntfy)
     if current_hour == 7:
-        title = "🤝 System Handshake Required"
-        # --- IKKADA NEE JOIN CODE PETTU MAWA ---
-        join_code = "YOUR_JOIN_CODE_HERE" 
-        message = f"Hunter, activate the WhatsApp channel for today's messages. Your code is: {join_code}"
-        send_ntfy_notification(message, title, tags="handshake")
+        # ... (same code as before)
+        pass
 
     # 2. The Automatic EOD Report (9:30 PM, via WhatsApp)
-    elif current_hour == 21: # Corresponds to 9:30 PM (21:00-21:59)
-        db = initialize_firebase()
-        if db:
-            generate_and_send_eod_report(db)
+    elif current_hour == 21:
+        # ... (same code as before)
+        pass
 
     # 3. All Other Pings (via WhatsApp)
     elif current_hour in MESSAGE_POOL:
-        notification = MESSAGE_POOL[current_hour]
-        title = notification["title"]
-        message = random.choice(notification["messages"])
-        send_whatsapp_notification(title, message)
+        # ... (same code as before)
+        pass
 
     else:
         print(f"No special task scheduled for hour {current_hour}. Exiting.")
