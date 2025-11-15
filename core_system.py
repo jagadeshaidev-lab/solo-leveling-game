@@ -19,7 +19,7 @@ QUESTS  = {
         "is_mandatory": True
     },
     "gym_morning": {
-        "name": "Gym Workout (6:30–8:00 AM)",
+        "name": "Gym Workout (7:00–8:30 AM)",
         "xp": 150,
         "gold": 15,
         "stat_bonus": ("str", 2)
@@ -98,39 +98,8 @@ QUESTS  = {
         "gold": 3,
         "stat_bonus": ("cha", 1),
         "is_mandatory": True
-    },
-
-    # 🧠 Bonus Quests   Copilot’s Picks
-    "gratitude_journal": {
-        "name": "Write 3 Gratitude Points",
-        "xp": 20,
-        "gold": 2,
-        "stat_bonus": ("wil", 1)
-    },
-    "binaural_beats": {
-        "name": "Listen to 40Hz Gamma Beats (30 mins)",
-        "xp": 30,
-        "gold": 3,
-        "stat_bonus": ("intel", 1)
-    },
-    "posture_check": {
-        "name": "Correct Sitting Posture (Ergo Boost)",
-        "xp": 15,
-        "gold": 1,
-        "stat_bonus": ("str", 1)
-    },
-    "no_doomscrolling": {
-        "name": "Avoid Doomscrolling (Digital Discipline)",
-        "xp": 25,
-        "gold": 2,
-        "stat_bonus": ("wil", 1)
-    },
-    "send_meme": {
-        "name": "Send a Dank Meme to a Friend",
-        "xp": 10,
-        "gold": 1,
-        "stat_bonus": ("cha", 1)
     }
+    
 }
 STORE_ITEMS = {
     "insta": {"name": "15 Min of 🅾  𝐈𝐧𝐬𝐭𝐚𝐠𝐫𝐚𝐦 ", "cost": 15},
